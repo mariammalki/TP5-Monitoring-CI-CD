@@ -1,0 +1,47 @@
+name: CI-CD Monitoring
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Installer Docker et Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker.io docker-compose
+
+      - name: Build de l'image Flask
+        run: docker build -t flask-monitoring-app .
+
+      - name: Test de l'application Flask
+        run: |
+          docker run -d -p 5000:5000 flask-monitoring-app
+          sleep 5
+          chmod +x test_app.sh
+          ./test_app.sh
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Installer Docker et Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker.io docker-compose
+
+      - name: Déploiement de la stack monitoring
+        run: |
+          cd advanced-monitoring
+          docker-compose up -d

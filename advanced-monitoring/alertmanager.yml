@@ -1,0 +1,10 @@
+global:
+  resolve_timeout: 1m
+
+route:
+  receiver: 'default'
+
+receivers:
+- name: 'default'
+# Pour le TP, on garde la configuration locale
+# On peut ajouter e-mail, Slack ou webhook ici plus tard

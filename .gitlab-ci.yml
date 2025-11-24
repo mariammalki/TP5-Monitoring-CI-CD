@@ -1,0 +1,24 @@
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker build -t flask-monitoring-app .
+
+test:
+  stage: test
+  script:
+    - docker run -d -p 5000:5000 flask-monitoring-app
+    - sleep 5
+    - curl -f http://localhost:5000 || exit 1
+
+deploy:
+  stage: deploy
+  script:
+    - cd advanced-monitoring
+    - docker-compose up -d
+  only:
+    - main

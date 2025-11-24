@@ -1,0 +1,20 @@
+groups:
+- name: example_alerts
+  rules:
+  - alert: HighCPUUsage
+    expr: rate(node_cpu_seconds_total{mode!="idle"}[1m]) > 0.7
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Haute utilisation CPU détectée"
+      description: "L'utilisation CPU dépasse 70% depuis plus d'une minute"
+
+  - alert: FlaskAppDown
+    expr: up{job="flask_app"} == 0
+    for: 30s
+    labels:
+      severity: critical
+    annotations:
+      summary: "L'application Flask est indisponible"
+      description: "Le service /metrics de Flask ne répond plus"
