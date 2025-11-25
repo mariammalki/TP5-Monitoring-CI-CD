@@ -16,6 +16,10 @@ def index():
     # Simulation d’un traitement aléatoire
     time.sleep(random.uniform(0.1, 0.5))
     REQUEST_LATENCY.observe(time.time() - start_time)
+    
+    # Modification simulée pour test CI/CD
+    print("Hello DevOps! CI/CD test commit")  # <-- ajouté
+    
     return jsonify(message="Hello DevOps!"), 200
 
 @app.route('/metrics')
